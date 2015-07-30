@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/donate</path>
+    <page_callback>CRM_QuickDonate_Form_QuickDonate</page_callback>
+    <title>Quick Donation Page</title>
+    <access_arguments>make online contributions</access_arguments>
+    <weight>0</weight>
+    <is_ssl>true</is_ssl>
+    <is_public>true</is_public>
+  </item>
+</menu>
