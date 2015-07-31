@@ -24,64 +24,79 @@
  +--------------------------------------------------------------------+
 *}
 
-{literal}
-<div class="quick-donate-box">
-  <h3>Save an Acre</h3>
-  <h4>100% funds rainforest projects</h4>
-  <div class="donate-amount">
-    <span class="preinput">£</span>
-    <input id="direct_donation_form_amount" name="donation_form[amount]" required="required" type="number" value="40">
-    <span class="postinput">GBP</span>
+{if $status eq 'thankyou'}
+  <div id="help">
+    <div>{ts 1=$email}Your transaction has been processed successfully. An email receipt has also been sent to %1{/ts}</div>
+    {if $linkTextUrl}
+      <br />
+      <div class="crm-section create_pcp_link-section">
+        <a href="{$linkTextUrl}" title="{ts}Setup An Account{/ts}" class="button"><span>&raquo; {ts}Setup An Account{/ts}</span></a>
+      </div><br /><br />
+    {/if}
   </div>
-  <div class="monthly-subscription">
-    <input name="donation_form[payment_monthly_subscription]" type="hidden" value="0">
-    <input id="direct_donation_form_payment_monthly_subscription" name="donation_form[payment_monthly_subscription]" type="checkbox" value="1">
-    <label for="direct_donation_form_payment_monthly_subscription">Make this a recurring monthly gift</label>
+{elseif $status eq 'quickdonate'}
+  {literal}
+  <div class="quick-donate-box">
+    <h3>Save an Acre</h3>
+    <h4>100% funds rainforest projects</h4>
+    <div class="donate-amount">
+      <span class="preinput">£</span>
+      <input id="direct_donation_form_amount" name="total_amount" required="required" type="number" value="40">
+      <span class="postinput">GBP</span>
+    </div>
+    <div class="monthly-subscription">
+      <input name="donation_form[payment_monthly_subscription]" type="hidden" value="0">
+      <input id="direct_donation_form_payment_monthly_subscription" name="donation_form[payment_monthly_subscription]" type="checkbox" value="1">
+      <label for="direct_donation_form_payment_monthly_subscription">Make this a recurring monthly gift</label>
+    </div>
+    <div class="donate-buttons">
+      <button id="customButton" class="button payment large stripe-donate-button" name="button" type="submit">Give by <i class="icn credit-card">Credit Card</i></button>
+      <button class="button payment large paypal-donate-button right" name="button" type="submit">Give by <i class="icn paypal">Direct Debit</i></button>
+    </div>
+    <div class="donate-by-check">
+      <!-- a href="#donate-by-check">Give by check or stock</a-->
+      <input type="hidden" id="stripe_token" name="stripe_token"/>
+      <input type="hidden" id="email" name="email"/>
+    </div>
   </div>
-  <div class="donate-buttons">
-    <button id="customButton" class="button payment large stripe-donate-button" name="button" type="submit">Give by <i class="icn credit-card">credit card</i></button>
-    <button class="button payment large paypal-donate-button right" name="button" type="submit">Give by <i class="icn paypal">PayPal</i></button>
-  </div>
-  <div class="donate-by-check">
-    <a href="#donate-by-check">Give by check or stock</a>
-    <input type="hidden" id="stripeToken" name="stripeToken"/>
-    <input type="hidden" id="stripeEmail" name="stripeEmail"/>
-  </div>
-</div>
-{/literal}
-
-{literal}
-<script src="https://checkout.stripe.com/checkout.js"></script>
-
-<script>
-CRM.$(function($) {
-  var handler = StripeCheckout.configure({
-    key: 'pk_test_eG1XE0rZaYn2UeprCEdmOSTC',
-    image: 'http://d46.demo.civicrm.org/sites/all/modules/civicrm/i/smallLogo.png',
-    token: function(token) {
-      // Use the token to create the charge with a server-side script.
-      // You can access the token ID with `token.id`
-      $("#stripeToken").val(token.id);
-      $("#stripeEmail").val(token.email);
-      $('#QuickDonate').submit();
-    }
-  });
-
-  $('#customButton').on('click', function(e) {
-    // Open Checkout with further options
-    handler.open({
-      name: 'Cool Earth',
-      description: '2 widgets',
-      currency: "gbp",
-      amount: $("#direct_donation_form_amount").val() * 100
+  {/literal}
+  
+  {literal}
+  <script src="https://checkout.stripe.com/checkout.js"></script>
+  
+  <script>
+  CRM.$(function($) {
+    var handler = StripeCheckout.configure({
+      key:   {/literal}'{$key}'{literal},
+      image: 'http://d46.demo.civicrm.org/sites/all/modules/civicrm/i/smallLogo.png',
+      token: function(token) {
+        // Use the token to create the charge with a server-side script.
+        // You can access the token ID with `token.id`
+        $("#stripe_token").val(token.id);
+        $("#email").val(token.email);
+        $('#QuickDonate').submit();
+      }
     });
-    e.preventDefault();
+  
+    $('#customButton').on('click', function(e) {
+      // Open Checkout with further options
+      handler.open({
+        name:        'Cool Earth',
+        description: 'Saving Rainforest',
+        currency:    {/literal}'{$currency}'{literal},
+        amount:      $("#direct_donation_form_amount").val() * 100,
+        email:       {/literal}'{$email}'{literal}
+      });
+      e.preventDefault();
+    });
+  
+    // Close Checkout on page navigation
+    $(window).on('popstate', function() {
+      handler.close();
+    });
   });
-
-  // Close Checkout on page navigation
-  $(window).on('popstate', function() {
-    handler.close();
-  });
-});
-</script>
-{/literal}
+  </script>
+  {/literal}
+{else}
+  {$error}
+{/if}
