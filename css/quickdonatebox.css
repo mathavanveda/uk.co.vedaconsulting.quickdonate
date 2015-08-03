@@ -1,41 +1,44 @@
-.crm-container .quick-donate-box div {
+.crm-container #crm-main-content-wrapper .quick-donate-box div {
   //border: 1px solid black !important;
-  padding: 15px;
+  padding: 5px !important;
 }
-.crm-container .quick-donate-box .monthly-subscription,
-.crm-container .quick-donate-box .donate-buttons,
-.crm-container .quick-donate-box .donate-by-check {
-  padding-left: 22px;
+.crm-container #crm-main-content-wrapper .quick-donate-box .monthly-subscription,
+.crm-container #crm-main-content-wrapper .quick-donate-box .donate-amount,
+.crm-container #crm-main-content-wrapper .quick-donate-box .donate-buttons,
+.crm-container #crm-main-content-wrapper .quick-donate-box .donate-by-check {
+  padding-left: 5% !important;
 }
-.crm-container .quick-donate-box {
-  //border: 1px solid black !important;
-  width: 34%;
+.crm-container #crm-main-content-wrapper .quick-donate-box {
+  width: 34% !important;
   border-radius: 13px !important;
   box-shadow: rgb(153, 153, 153) 0px 2px 8px 0px !important;
 }
-.crm-container .quick-donate-box label {
-  font-size: 0.9rem;
+.crm-container #crm-main-content-wrapper .quick-donate-box label {
+  font-size: 0.9rem !important;
 }
-.crm-container .quick-donate-box h3,
-.crm-container .quick-donate-box h4 {
+.crm-container #crm-main-content-wrapper .quick-donate-box h3,
+.crm-container #crm-main-content-wrapper .quick-donate-box h4 {
   background-color: transparent !important;
-  text-align: center;
-  margin-bottom: 5px;
+  text-align: center !important;
+  margin-bottom: 5px !important;
 }
-.crm-container .quick-donate-box .donate-amount .preinput {
-  position: relative;
-  top: -2px;
-  left: 20px;
+.crm-container #crm-main-content-wrapper .quick-donate-box .donate-amount .preinput {
+  width: 10%;
 }
-.crm-container .quick-donate-box .donate-amount .postinput {
-  position: relative;
-  top: -2px;
-  left: -60px;
+.crm-container #crm-main-content-wrapper .quick-donate-box .donate-amount .postinput {
+  width: 15%;
 }
-.crm-container .quick-donate-box .donate-amount input {
-  height: 40px;
-  font-size: 19px;
-  color: #369ff4;
-  padding-left: 19px;
+.crm-container #crm-main-content-wrapper .quick-donate-box .donate-amount input {
+  height: 40px !important;
+  width: 60% !important;
+  color: #369ff4 !important;
+  padding-left: 19px !important;
 }
-
+.crm-container #crm-main-content-wrapper .quick-donate-box .donate-buttons .cc {
+  display: inline-block;
+  float: left;
+}
+.crm-container #crm-main-content-wrapper .quick-donate-box .donate-buttons .dd {
+  display: inline-block;
+  float: right;
+}

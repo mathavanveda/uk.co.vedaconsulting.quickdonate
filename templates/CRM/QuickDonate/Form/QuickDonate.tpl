@@ -50,8 +50,13 @@
       <label for="direct_donation_form_payment_monthly_subscription">Make this a recurring monthly gift</label>
     </div>
     <div class="donate-buttons">
-      <button id="customButton" class="button payment large stripe-donate-button" name="button" type="submit">Give by <i class="icn credit-card">Credit Card</i></button>
-      <button class="button payment large paypal-donate-button right" name="button" type="submit">Give by <i class="icn paypal">Direct Debit</i></button>
+      <div class="cc">
+        <button id="customButton" class="button payment large stripe-donate-button" name="button" type="submit">Give by <i class="icn credit-card">Credit Card</i></button>
+      </div>
+      <div class="dd">
+        <button class="button payment large paypal-donate-button right" name="button" type="submit">Give by <i class="icn paypal">Direct Debit</i></button>
+      </div>
+      <div class="clear"></div>
     </div>
     <div class="donate-by-check">
       <!-- a href="#donate-by-check">Give by check or stock</a-->
