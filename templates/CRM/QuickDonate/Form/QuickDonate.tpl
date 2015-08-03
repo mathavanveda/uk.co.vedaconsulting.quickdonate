@@ -35,7 +35,6 @@
     {/if}
   </div>
 {elseif $status eq 'quickdonate'}
-  {literal}
   <div class="quick-donate-box">
     <h3>Save an Acre</h3>
     <h4>100% funds rainforest projects</h4>
@@ -54,7 +53,7 @@
         <button id="customButton" class="button payment large stripe-donate-button" name="button" type="submit">Give by <i class="icn credit-card">Credit Card</i></button>
       </div>
       <div class="dd">
-        <button class="button payment large paypal-donate-button right" name="button" type="submit">Give by <i class="icn paypal">Direct Debit</i></button>
+        <a class="button" href="{crmURL p='civicrm/contribute/transact' q="reset=1&id=4" fe='true'}" target="_blank">Give by <i class="icn paypal">Direct Debit</i></a>
       </div>
       <div class="clear"></div>
     </div>
@@ -64,7 +63,6 @@
       <input type="hidden" id="email" name="email"/>
     </div>
   </div>
-  {/literal}
   
   {literal}
   <script src="https://checkout.stripe.com/checkout.js"></script>
