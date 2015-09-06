@@ -54,7 +54,7 @@ class CRM_QuickDonate_Form_Campaign extends CRM_Core_Form {
     $this->assign('context', $this->_context);
 
     $this->_pageId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
-    $title = ts('Setup a Personal Campaign Page - Step 2');
+    $title = ts('Setup a Personal Campaign Page');
 
     if ($this->_pageId) {
       $title = ts('Edit Your Personal Campaign Page');

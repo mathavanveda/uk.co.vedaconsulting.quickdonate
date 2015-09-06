@@ -10,7 +10,7 @@
     <is_public>true</is_public>
   </item>
   <item>
-     <path>civicrm/quickdonate/setup</path>
+     <path>civicrm/pcp/setup</path>
      <title>Quick Donation - Account Information</title>
      <page_callback>CRM_QuickDonate_Controller_QuickDonate</page_callback>
      <access_arguments>register for events</access_arguments>
