@@ -36,7 +36,7 @@
 /**
  * This class generates form components for processing a contribution.
  */
-class CRM_PCP_Form_PCPAccount extends CRM_Core_Form {
+class CRM_QuickDonate_Form_PCPAccount extends CRM_Core_Form {
 
   /**
    * Variable defined for Contribution Page Id.
