@@ -58,7 +58,15 @@ class CRM_QuickDonate_StateMachine_QuickDonate extends CRM_Core_StateMachine {
       'CRM_QuickDonate_Form_PCPAccount' => NULL,
       'CRM_QuickDonate_Form_Campaign' => NULL,
     );
-
+    
+    //MV: skip pcpAccount for logged in user
+    $userID = $session->get('userID');
+    $controller->set('jumpForm', FALSE);
+    if ($userID) {
+      unset($this->_pages['CRM_QuickDonate_Form_PCPAccount']);
+      $controller->set('jumpForm', TRUE);
+    }
+    
     $this->addSequentialPages($this->_pages, $action);
   }
 

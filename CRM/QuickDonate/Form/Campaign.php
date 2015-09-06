@@ -59,7 +59,12 @@ class CRM_QuickDonate_Form_Campaign extends CRM_Core_Form {
     if ($this->_pageId) {
       $title = ts('Edit Your Personal Campaign Page');
     }
-
+    
+    //MV: skip the pcpaccount form for logged in user
+    if($this->controller->get('jumpForm')){
+      CRM_QuickDonate_Form_PCPAccount::setPreProcessVariables($this);
+    }
+    
     CRM_Utils_System::setTitle($title);
     parent::preProcess();
   }

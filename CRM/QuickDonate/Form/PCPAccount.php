@@ -61,56 +61,60 @@ class CRM_QuickDonate_Form_PCPAccount extends CRM_Core_Form {
 
 
   public function preProcess() {
-    $session = CRM_Core_Session::singleton();
-    $config = CRM_Core_Config::singleton();
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
-    $this->_pageId = CRM_Utils_Request::retrieve('pageId', 'Positive', $this);
-    $this->_component = CRM_Utils_Request::retrieve('component', 'String', $this);
-    $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
-
-    if (!$this->_pageId && $config->userFramework == 'Joomla' && $config->userFrameworkFrontend) {
-      $this->_pageId = $this->_id;
-    }
-
-    if ($this->_id) {
-      $contactID = CRM_Core_DAO::getFieldValue('CRM_PCP_DAO_PCP', $this->_id, 'contact_id');
-    }
-
-    $this->_contactID = isset($contactID) ? $contactID : $session->get('userID');
-    if (!$this->_pageId) {
-      if (!$this->_id) {
-        $msg = ts('We can\'t load the requested web page due to an incomplete link. This can be caused by using your browser\'s Back button or by using an incomplete or invalid link.');
-        CRM_Core_Error::fatal($msg);
-      }
-      else {
-        $this->_pageId = CRM_Core_DAO::getFieldValue('CRM_PCP_DAO_PCP', $this->_id, 'page_id');
-      }
-    }
-
-    if (!$this->_pageId) {
-      CRM_Core_Error::fatal(ts('Could not find source page id.'));
-    }
-
-    $this->_single = $this->get('single');
-
-    if (!$this->_single) {
-      $this->_single = $session->get('singleForm');
-    }
-
-    $this->set('action', $this->_action);
-    $this->set('page_id', $this->_id);
-    $this->set('component_page_id', $this->_pageId);
-
-    // we do not want to display recently viewed items, so turn off
-    $this->assign('displayRecent', FALSE);
-
-    $this->assign('pcpComponent', $this->_component);
-
+    //MV: set defualt variables
+    self::setPreProcessVariables($this);
+    
     if ($this->_single) {
       CRM_Utils_System::setTitle(ts('Update Contact Information'));
     }
   }
+  
+  static function setPreProcessVariables(&$dao){
+    $session = CRM_Core_Session::singleton();
+    $config = CRM_Core_Config::singleton();
+    $dao->_action = CRM_Utils_Request::retrieve('action', 'String', $dao, FALSE);
+    $dao->_pageId = CRM_Utils_Request::retrieve('pageId', 'Positive', $dao);
+    $dao->_component = CRM_Utils_Request::retrieve('component', 'String', $dao);
+    $dao->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
+    if (!$dao->_pageId && $config->userFramework == 'Joomla' && $config->userFrameworkFrontend) {
+      $dao->_pageId = $dao->_id;
+    }
 
+    if ($dao->_id) {
+      $contactID = CRM_Core_DAO::getFieldValue('CRM_PCP_DAO_PCP', $dao->_id, 'contact_id');
+    }
+
+    $dao->_contactID = isset($contactID) ? $contactID : $session->get('userID');
+    if (!$dao->_pageId) {
+      if (!$dao->_id) {
+        $msg = ts('We can\'t load the requested web page due to an incomplete link. This can be caused by using your browser\'s Back button or by using an incomplete or invalid link.');
+        CRM_Core_Error::fatal($msg);
+      }
+      else {
+        $dao->_pageId = CRM_Core_DAO::getFieldValue('CRM_PCP_DAO_PCP', $dao->_id, 'page_id');
+      }
+    }
+
+    if (!$dao->_pageId) {
+      CRM_Core_Error::fatal(ts('Could not find source page id.'));
+    }
+
+    $dao->_single = $dao->get('single');
+
+    if (!$dao->_single) {
+      $dao->_single = $session->get('singleForm');
+    }
+
+    $dao->set('action', $dao->_action);
+    $dao->set('page_id', $dao->_id);
+    $dao->set('component_page_id', $dao->_pageId);
+
+    // we do not want to display recently viewed items, so turn off
+    $dao->assign('displayRecent', FALSE);
+
+    $dao->assign('pcpComponent', $dao->_component);
+  }
+  
   /**
    * @return array
    */
