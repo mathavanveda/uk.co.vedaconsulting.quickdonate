@@ -66,7 +66,28 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       CRM_Core_Error::fatal(ts('Multiple payment processors not supported with quick donate.'));
     }
     $processorDetails = CRM_Financial_BAO_PaymentProcessor::getPayment($pageConfig['payment_processor'], 'live');
+    
+    //MV: get amount details if other amount enabled for contribution page.
+    if ($pageConfig['amount_block_is_active']) {
+      $sql = "SELECT cpfv.amount, cpfv.is_default, cpfv.weight 
+        FROM civicrm_price_field_value cpfv 
+        INNER JOIN civicrm_price_field cpf ON (cpf.id = cpfv.price_field_id)
+        INNER JOIN civicrm_price_set_entity cpse ON (cpse.price_set_id = cpf.price_set_id)
+        WHERE cpse.entity_id = %1 AND cpf.name = 'contribution_amount'
+      ";
+      $dao = CRM_Core_DAO::executeQuery($sql, array(1 => array($pageConfig['id'], 'Integer')));
+      $amount = 0;
+      while ($dao->fetch()) {
+        if ($dao->weight == 1 || $dao->is_default == 1) {
+          $amount = $dao->amount;
+        }
+      }
+    }
+    $pageConfig['default_amount'] = $amount ? $amount : $pageConfig['min_amount'];
+    
 
+    $pageConfig['currency_symbol'] = CRM_Core_DAO::getFieldValue('CRM_Financial_DAO_Currency', $pageConfig['currency'], 'symbol', 'name');
+    $this->assign('pageConfig', $pageConfig);
     $this->assign('key', $processorDetails['password']);
     $this->assign('currency', strtolower($pageConfig['currency']));
 
@@ -110,6 +131,7 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       }
       else if ($result){
         $contributionID = $result['id'];
+        $contactID = $result['values'][$contributionID]['contact_id'];
         // Send receipt
         civicrm_api3('contribution', 'sendconfirmation', array('id' => $contributionID) + $pageConfig);
         CRM_Utils_System::setTitle(ts('Thank you'));
@@ -118,11 +140,44 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
         $profileID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', 'Supporter Profile', 'id', 'title');
         // Link (button) for users to create their own Personal Campaign page
         if ($profileID && !$session->get('userID')) {
-          $linkTextUrl = CRM_Utils_System::url('civicrm/profile/create',
-            "gid={$profileID}&reset=1",
-            FALSE, NULL, TRUE
+          $ufId  = CRM_Core_BAO_UFMatch::getUFId($contactID);
+          if ($ufId) {
+            $config = CRM_Core_Config::singleton();
+            $loginURL = $config->userSystem->getLoginURL();
+            $this->assign('loginURL', $loginURL);
+          }
+          else {
+            $linkTextUrl = CRM_Utils_System::url('civicrm/profile/create',
+              "gid={$profileID}&reset=1",
+              FALSE, NULL, TRUE
+            );
+            $this->assign('linkTextUrl', $linkTextUrl);
+          }
+        }
+        
+        
+        //redirect if the logged in user
+        if ($session->get('userID')) {
+          $urlParams = array(
+            'pageId' => $this->_id,
+            'component' => 'contribute',
+            'reset' => 1,
           );
-          $this->assign('linkTextUrl', $linkTextUrl);
+          $sql = "SELECT pcp.id FROM civicrm_pcp pcp 
+          INNER JOIN  civicrm_pcp_block cpb ON (cpb.id = pcp.pcp_block_id)
+          WHERE cpb.entity_id = %1 AND pcp.contact_id = %2
+          ";
+          $sqlparams = array(
+            1 => array($pageConfig['id'], 'Integer'),
+            2 => array($contactID, 'Integer'),
+          );
+          
+          $pcpId = CRM_Core_DAO::singleValueQuery($sql, $sqlparams); 
+          if ($pcpId) {
+            $urlParams['id'] = $pcpId;
+          }
+          $url = CRM_Utils_System::url('civicrm/pcp/setup', $urlParams);
+          CRM_Utils_System::redirect($url);
         }
       }
     }

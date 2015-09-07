@@ -54,6 +54,8 @@ class CRM_QuickDonate_Form_Campaign extends CRM_Core_Form {
     $this->assign('context', $this->_context);
 
     $this->_pageId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
+    $componentPageId = CRM_Utils_Request::retrieve('pageId', 'Positive', $this, FALSE);
+    $this->controller->set('component_page_id', $componentPageId);
     $title = ts('Setup a Personal Campaign Page');
 
     if ($this->_pageId) {
@@ -61,7 +63,7 @@ class CRM_QuickDonate_Form_Campaign extends CRM_Core_Form {
     }
     
     //MV: skip the pcpaccount form for logged in user
-    if($this->controller->get('jumpForm')){
+    if($this->controller->get('jumpForm') && $this->_pageId){
       CRM_QuickDonate_Form_PCPAccount::setPreProcessVariables($this);
     }
     
@@ -70,7 +72,7 @@ class CRM_QuickDonate_Form_Campaign extends CRM_Core_Form {
   }
 
   public function setDefaultValues() {
-    $dafaults = array();
+    $defaults = array();
     $dao = new CRM_PCP_DAO_PCP();
 
     if ($this->_pageId) {

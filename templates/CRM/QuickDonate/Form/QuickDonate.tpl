@@ -33,15 +33,21 @@
         <a href="{$linkTextUrl}" title="{ts}Setup An Account{/ts}" class="button"><span>&raquo; {ts}Setup An Account{/ts}</span></a>
       </div><br /><br />
     {/if}
+    {if $loginURL}
+      <br />
+      <div class="crm-section create_pcp_link-section">
+        <a href="{$loginURL}" title="{ts}Login to Account{/ts}" class="button"><span>&raquo; {ts}Login to Account{/ts}</span></a>
+      </div><br /><br />
+    {/if}
   </div>
 {elseif $status eq 'quickdonate'}
   <div class="quick-donate-box">
-    <h3>Save an Acre</h3>
-    <h4>100% funds rainforest projects</h4>
+    <h3>{$pageConfig.title}</h3>
+    <h4>{$pageConfig.intro_text}</h4>
     <div class="donate-amount">
-      <span class="preinput">£</span>
-      <input id="direct_donation_form_amount" name="total_amount" required="required" type="number" value="40">
-      <span class="postinput">GBP</span>
+      <span class="preinput">{$pageConfig.currency_symbol}</span>
+      <input id="direct_donation_form_amount" name="total_amount" required="required" type="number" value="{$pageConfig.default_amount}">
+      <span class="postinput">{$pageConfig.currency}</span>
     </div>
     <div class="monthly-subscription">
       <input name="donation_form[payment_monthly_subscription]" type="hidden" value="0">
