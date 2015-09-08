@@ -256,8 +256,6 @@ class CRM_QuickDonate_Form_Campaign extends CRM_Core_Form {
     $userID = civicrm_api3('CiviData', 'getwpuserid', array('civi_id' => $pcp->contact_id));
     create_wp_campaign( $pcp->title, $userID, $pcp->id );
     
-    CRM_Core_Error::debug_log_message("Calling create_wp_campaign.... Params title: {$pcp->title}, userID: {$userID}, pcp_id: {$pcp->id} ");
-    
     // add attachments as needed
     CRM_Core_BAO_File::formatAttachment($params,
       $params,
