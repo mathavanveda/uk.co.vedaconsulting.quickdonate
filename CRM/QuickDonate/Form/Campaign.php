@@ -254,6 +254,8 @@ class CRM_QuickDonate_Form_Campaign extends CRM_Core_Form {
     //create page in wordpress
     create_wp_campaign( $pcp->title, $pcp->contact_id, $pcp->id );
     
+    CRM_Core_Error::debug_log_message("Calling create_wp_campaign.... Params title: {$pcp->title}, contact_id: {$pcp->contact_id}, pcp_id: {$pcp->id} ");
+    
     // add attachments as needed
     CRM_Core_BAO_File::formatAttachment($params,
       $params,
