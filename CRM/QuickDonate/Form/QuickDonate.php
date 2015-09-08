@@ -135,6 +135,11 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       }
       //gift aid end
       
+      //campaign
+      if ($pageConfig['campaign_id']) {
+        $contributionParams['campaign_id'] = $pageConfig['campaign_id'];
+      }
+      
       try {
         $result = civicrm_api3('Contribution', 'transact', $contributionParams);
       }
