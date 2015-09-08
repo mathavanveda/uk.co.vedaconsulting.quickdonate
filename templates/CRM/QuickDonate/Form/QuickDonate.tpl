@@ -54,6 +54,11 @@
       <input id="direct_donation_form_payment_monthly_subscription" name="donation_form[payment_monthly_subscription]" type="checkbox" value="1">
       <label for="direct_donation_form_payment_monthly_subscription">Make this a recurring monthly gift</label>
     </div>
+    <div class="monthly-subscription">
+      <input name="donation_form[gift_aid]" type="hidden" value="0">
+      <input id="direct_donation_form_gift_aid" name="donation_form[gift_aid]" type="checkbox" value="1">
+      <label for="direct_donation_form_gift_aid">Gift Aid</label>
+    </div>
     <div class="donate-buttons">
       <div class="cc">
         <button id="customButton" class="button payment large stripe-donate-button" name="button" type="submit">Give by <i class="icn credit-card">Credit Card</i></button>

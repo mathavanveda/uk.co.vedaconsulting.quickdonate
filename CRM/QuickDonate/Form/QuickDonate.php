@@ -38,7 +38,9 @@
  *
  */
 class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
-
+  
+  CONST C_CUSTOM_GROUP_GIFT_AID = 'Gift_Aid';
+  CONST C_CUSTOM_FIELD_GIFT_AID = 'Eligible_for_Gift_Aid';
   /**
    * Set variables up before form is built.
    *
@@ -115,7 +117,24 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       $contributionParams['contact_id'] = $contactID;
       $contributionParams['payment_processor_id'] = $pageConfig['payment_processor'];
       $contributionParams['currencyID'] = $pageConfig['currency'];
-
+      
+      //gift aid 
+      //get gift aid custom field id 
+      $sqlCF = "SELECT cf.id 
+      FROM civicrm_custom_field cf 
+      INNER JOIN civicrm_custom_group cg ON (cg.id = cf.custom_group_id) 
+      WHERE cg.name = %1 AND cf.name = %2";
+      $sqlCFParams = array(
+        1 => array(self::C_CUSTOM_GROUP_GIFT_AID, 'String'),
+        2 => array(self::C_CUSTOM_FIELD_GIFT_AID, 'String'),
+      );
+      $cfId = CRM_Core_DAO::singleValueQuery($sqlCF, $sqlCFParams);
+      
+      if ($cfId && $contributionParams['donation_form']['gift_aid']) {
+        $contributionParams["custom_{$cfId}"] = 1;
+      }
+      //gift aid end
+      
       try {
         $result = civicrm_api3('Contribution', 'transact', $contributionParams);
       }
