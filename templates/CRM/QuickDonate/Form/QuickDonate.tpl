@@ -77,7 +77,7 @@
       </div>
       <div class="contact_supplemental_address_1">
         <input name="contact_details[supplemental_address_1]" type="hidden" value="">
-        <label for="contact_details_supplemental_address_1">Street Address</label> &nbsp;&nbsp;
+        <label for="contact_details_supplemental_address_1">Supplemental Address</label> &nbsp;&nbsp;
         <input id="contact_details_supplemental_address_1" name="contact_details[supplemental_address_1]" type="text" value="{$supplementalAddress1}">
       </div>      
       <div class="contact_city">
