@@ -52,6 +52,7 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
     $contributionParams = $requestParams = $_REQUEST;
 
     $contactID = $session->get('userID');
+    $addressId = NULL;
     if ($contactID && empty($contributionParams['email'])) {
       $emailDetails = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID);
       if (!empty($emailDetails)) {
@@ -61,8 +62,12 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       }
       
       $nameDetails = self::getNameAddressPostCodeByContactId($contactID);
-      $this->assign('displayName', $nameDetails['displayName']);
-      $this->assign('address'    , $nameDetails['address']);
+      $addressId = $nameDetails['address_id'];
+      $this->assign('firstName', $nameDetails['first_name']);
+      $this->assign('lastName', $nameDetails['last_name']);
+      $this->assign('streetAddress'    , $nameDetails['street_address']);
+      $this->assign('supplementalAddress1'    , $nameDetails['supplemental_address_1']);
+      $this->assign('city'    , $nameDetails['city']);
       $this->assign('postCode'  , $nameDetails['post_code']);
     }
 
@@ -119,6 +124,8 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
           $contactID = $cont['id'];
         }
       }
+      //updateAddress
+      self::updateAddress($contactID, $contributionParams['contact_details'], $addressId);
       $contributionParams['contact_id'] = $contactID;
       $contributionParams['payment_processor_id'] = $pageConfig['payment_processor'];
       $contributionParams['currencyID'] = $pageConfig['currency'];
@@ -260,8 +267,12 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       return array();
     }
     $returnArray['address']     = $returnArray['post_code'] = null;
-    $returnArray['displayName'] = CRM_Contact_BAO_Contact::displayName($contactID);
+    $contact = new CRM_Contact_BAO_Contact();
+    $contact->id = $contactID;
+    $contact->find(TRUE);
     
+    $returnArray['first_name'] = $contact->first_name;
+    $returnArray['last_name'] = $contact->last_name;
     //address
     $result = civicrm_api3('Address', 'get', array(
       'sequential' => 1,
@@ -269,9 +280,11 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       'contact_id' => $contactID,
     ));
     if ($result['count'] == 1) {
-      $address = array( $result['values'][0]['street_address'], $result['values'][0]['city']);
-      $returnArray['address'] = implode(', ', $address);
+      $returnArray['street_address'] = $result['values'][0]['street_address'];
+      $returnArray['city'] = $result['values'][0]['city'];
       $returnArray['post_code'] = $result['values'][0]['postal_code'];
+      $returnArray['supplemental_address_1'] = $result['values'][0]['supplemental_address_1'];
+      $returnArray['address_id'] = $result['values'][0]['id'];
     }
     
     return $returnArray;
@@ -291,5 +304,43 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       2 => array($cfName, 'String'),
     );
     return CRM_Core_DAO::singleValueQuery($sqlCF, $sqlCFParams);
+  }
+  
+  static function updateAddress($contactID, $contactDetails, $addressId = NULL) {
+    if (empty($contactID)) {
+      return array();
+    }
+    
+    $params['contact_id'] = $contactID;
+    $params['sequential'] = $params['is_primary'] = $params['location_type_id'] = 1;
+    if (!empty($contactDetails['post_code'])) {
+      $params ['postal_code'] = $contactDetails['post_code'];
+    }
+    
+    if (!$addressId) {
+      $address = civicrm_api3('Address', 'get', $params);
+      if (!$address['count'] == 1) {
+        $params['id'] = $address['id'];
+      }
+    }
+    else {
+      $params['id'] = $address['id'];
+    }
+    
+    if (!empty($contactDetails['street_address'])) {
+      $params ['street_address'] = $contactDetails['street_address'];
+    }
+    
+    if (!empty($contactDetails['supplemental_address_1'])) {
+      $params ['supplemental_address_1'] = $contactDetails['supplemental_address_1'];
+    }
+    
+    if (!empty($contactDetails['city'])) {
+      $params ['city'] = $contactDetails['city'];
+    } 
+    
+    $addressUdpate = civicrm_api3('Address', 'create', $params);
+    
+    return TRUE;   
   }
 }

@@ -60,20 +60,35 @@
       <label for="direct_donation_form_gift_aid">Gift Aid</label>
     </div>
     <div class="gift_aid_declaration">
-      <div class="contact_name">
-        <input name="donation_form[contact_name]" type="hidden" value="">
-        <label for="direct_donation_form_contact_name">Name</label> &nbsp;&nbsp;&nbsp;&nbsp;
-        <input id="direct_donation_form_contact_name" name="donation_form[contact_name]" type="text" value="{$displayName}">
+      <div class="first_name">
+        <input name="contact_details[first_name]" type="hidden" value="">
+        <label for="contact_details_first_name">First Name</label> &nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="contact_details_first_name" name="contact_details[first_name]" type="text" value="{$firstName}">
       </div>
-      <div class="giftee_address">
-        <input name="donation_form[giftee_address]" type="hidden" value="">
-        <label for="direct_donation_form_giftee_address">Address</label> &nbsp;&nbsp;
-        <input id="direct_donation_form_giftee_address" name="donation_form[giftee_address]" type="text" value="{$address}">
+      <div class="last_name">
+        <input name="contact_details[last_name]" type="hidden" value="">
+        <label for="contact_details_last_name">Last Name</label> &nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="contact_details_last_name" name="contact_details[last_name]" type="text" value="{$lastName}">
       </div>
-      <div class="giftee_post_code">
-        <input name="donation_form[giftee_post_code]" type="hidden" value="">
-        <label for="direct_donation_form_giftee_post_code">Post Code</label>
-        <input id="direct_donation_form_giftee_post_code" name="donation_form[giftee_post_code]" type="text" value="{$postCode}">
+      <div class="contact_street_address">
+        <input name="contact_details[street_address]" type="hidden" value="">
+        <label for="contact_details_street_address">Street Address</label> &nbsp;&nbsp;
+        <input id="contact_details_street_address" name="contact_details[street_address]" type="text" value="{$streetAddress}">
+      </div>
+      <div class="contact_supplemental_address_1">
+        <input name="contact_details[supplemental_address_1]" type="hidden" value="">
+        <label for="contact_details_supplemental_address_1">Street Address</label> &nbsp;&nbsp;
+        <input id="contact_details_supplemental_address_1" name="contact_details[supplemental_address_1]" type="text" value="{$supplementalAddress1}">
+      </div>      
+      <div class="contact_city">
+        <input name="contact_details[city]" type="hidden" value="">
+        <label for="contact_details_city">City</label> &nbsp;&nbsp;
+        <input id="contact_details_city" name="contact_details[city]" type="text" value="{$city}">
+      </div>
+      <div class="contact_post_code">
+        <input name="contact_details[post_code]" type="hidden" value="">
+        <label for="contact_details_post_code">Post Code</label>
+        <input id="contact_details_post_code" name="contact_details[post_code]" type="text" value="{$postCode}">
       </div> 
       <div class="giftee_declaration_text">
         <span><p>I confirm I have paid or will pay an amount of Income Tax and/or Capital 
