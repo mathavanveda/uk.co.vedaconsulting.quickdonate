@@ -119,10 +119,25 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
         $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual');
         // if we find more than one contact, use the first one
         $contactID = CRM_Utils_Array::value(0, $ids);
+        
+        
         if (!$contactID) {
           $cont = civicrm_api3('Contact', 'create', $contactParams);
           $contactID = $cont['id'];
         }
+      }
+      
+      $updateContactDetails = FALSE;
+      if (!empty($contributionParams['contact_details']['first_name'])) {
+        $updateContactDetails = TRUE;
+      }
+      
+      if (!empty($contributionParams['contact_details']['last_name'])) {
+        $updateContactDetails = TRUE;
+      }
+      
+      if ($updateContactDetails) {
+        self::updateContactDetails($contactID, $contributionParams['contact_details']);
       }
       //updateAddress
       self::updateAddress($contactID, $contributionParams['contact_details'], $addressId);
@@ -342,5 +357,24 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
     $addressUdpate = civicrm_api3('Address', 'create', $params);
     
     return TRUE;   
+  }
+  
+  static function updateContactDetails($contactID, $contactDetails) {
+    if (empty($contactID)) {
+      return;
+    }
+    if (!empty($contactDetails['first_name'])) {
+      $params['first_name'] = $contactDetails['first_name'];
+    }
+    
+    if ($contactDetails['last_name']) {
+      $params['last_name'] = $contactDetails['last_name'];
+    }
+    
+    $params['id'] = $contactID;
+    $params['sequential'] = 1;
+    civicrm_api3('Contact', 'create', $params);
+    
+    return TRUE;
   }
 }
