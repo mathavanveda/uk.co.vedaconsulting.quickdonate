@@ -140,6 +140,36 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
         $contributionParams['campaign_id'] = $pageConfig['campaign_id'];
       }
       
+      if ($contributionParams['donation_form']['payment_monthly_subscription']) {
+        $contributionParams["recur_frequency_unit"] = $pageConfig['recur_frequency_unit'] ? $pageConfig['recur_frequency_unit'] : 'month';
+        
+        //recur Params, 
+        $recurParams = array('contact_id' => $contactID);
+        $recurParams['start_date']          = $recurParams['create_date'] = $recurParams['modified_date'] = date('YmdHis');
+        $recurParams['amount']              = CRM_Utils_Array::value('total_amount', $contributionParams);
+        $recurParams['auto_renew']          = CRM_Utils_Array::value('auto_renew', $pageConfig);
+        $recurParams['frequency_unit']      = CRM_Utils_Array::value('recur_frequency_unit', $contributionParams);
+        $recurParams['frequency_interval']  = 1;
+        $recurParams['installments']        = CRM_Utils_Array::value('installments', $params);
+        $recurParams['financial_type_id']   = CRM_Utils_Array::value('financial_type_id', $pageConfig);
+        $recurParams['currency']            = CRM_Utils_Array::value('currency', $pageConfig);
+        $recurParams['is_test']             = 0;
+        $recurParams['payment_processor_id'] = CRM_Utils_Array::value('payment_processor', $pageConfig);
+        $recurParams['is_email_receipt']    = CRM_Utils_Array::value('is_email_receipt', $pageConfig);
+        $recurParams['contribution_status_id'] = CRM_Core_PseudoConstant::getKey('CRM_Contribute_BAO_Contribution', 'contribution_status_id', 'Pending');
+        $recurParams['campaign_id']         = CRM_Utils_Array::value('campaign_id', $pageConfig);;
+        
+        if ($pageConfig['is_monetary']) {
+          $recurParams['payment_instrument_id'] = 1;
+        }
+        $trxnId = $contactID."/".$recurParams['amount']."/".$recurParams['start_date'];
+        $recurParams['invoice_id']          = $recurParams['trxn_id'] = $trxnId;
+        $contributionParams['invoice_id']   = $contributionParams['trxn_id'] = $trxnId;
+        
+        $recurring = CRM_Contribute_BAO_ContributionRecur::add($recurParams);
+        $contributionParams['contribution_recur_id'] = $recurring->id;
+      }
+      
       try {
         $result = civicrm_api3('Contribution', 'transact', $contributionParams);
       }
@@ -149,6 +179,7 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
         CRM_Utils_System::setTitle(ts('Oops! There was a problem'));
       }
 
+      
       if (!empty($result['error'])) {
         $this->assign('error', $result['error']);
         CRM_Utils_System::setTitle(ts('Oops! There was a problem'));
