@@ -59,6 +59,37 @@
       <input id="direct_donation_form_gift_aid" name="donation_form[gift_aid]" type="checkbox" value="1">
       <label for="direct_donation_form_gift_aid">Gift Aid</label>
     </div>
+    <div class="gift_aid_declaration">
+      <div class="contact_name">
+        <input name="donation_form[contact_name]" type="hidden" value="">
+        <label for="direct_donation_form_contact_name">Name</label> &nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="direct_donation_form_contact_name" name="donation_form[contact_name]" type="text" value="{$displayName}">
+      </div>
+      <div class="giftee_address">
+        <input name="donation_form[giftee_address]" type="hidden" value="">
+        <label for="direct_donation_form_giftee_address">Address</label> &nbsp;&nbsp;
+        <input id="direct_donation_form_giftee_address" name="donation_form[giftee_address]" type="text" value="{$address}">
+      </div>
+      <div class="giftee_post_code">
+        <input name="donation_form[giftee_post_code]" type="hidden" value="">
+        <label for="direct_donation_form_giftee_post_code">Post Code</label>
+        <input id="direct_donation_form_giftee_post_code" name="donation_form[giftee_post_code]" type="text" value="{$postCode}">
+      </div> 
+      <div class="giftee_declaration_text">
+        <span><p>I confirm I have paid or will pay an amount of Income Tax and/or Capital 
+            Gains Tax for the current tax year (6 April 
+            to 5 April) that is at least equal to 
+            the amount of tax t
+            hat all the charities and Comm
+            unity Amateur Sports Clubs 
+            (CASCs) that I donate to will reclaim on my
+             gifts for the current tax year. I 
+            understand that other taxes 
+            such as VAT and Council Tax do not qualify. I 
+            understand the charity will reclaim 25p of tax on every £1 that I have given. 
+        </p></span>
+      </div>             
+    </div>
     <div class="donate-buttons">
       <div class="cc">
         <button id="customButton" class="button payment large stripe-donate-button" name="button" type="submit">Give by <i class="icn credit-card">Credit Card</i></button>

@@ -59,6 +59,11 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
         // for email to be prefilled
         $this->assign('email', $emailDetails[1]);
       }
+      
+      $nameDetails = self::getNameAddressPostCodeByContactId($contactID);
+      $this->assign('displayName', $nameDetails['displayName']);
+      $this->assign('address'    , $nameDetails['address']);
+      $this->assign('postCode'  , $nameDetails['post_code']);
     }
 
     $pageConfig = civicrm_api3('ContributionPage', 'getsingle', array(
@@ -120,15 +125,7 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       
       //gift aid 
       //get gift aid custom field id 
-      $sqlCF = "SELECT cf.id 
-      FROM civicrm_custom_field cf 
-      INNER JOIN civicrm_custom_group cg ON (cg.id = cf.custom_group_id) 
-      WHERE cg.name = %1 AND cf.name = %2";
-      $sqlCFParams = array(
-        1 => array(self::C_CUSTOM_GROUP_GIFT_AID, 'String'),
-        2 => array(self::C_CUSTOM_FIELD_GIFT_AID, 'String'),
-      );
-      $cfId = CRM_Core_DAO::singleValueQuery($sqlCF, $sqlCFParams);
+      $cfId = self::getcustomFieldIdbyGroupAndFieldName( self::C_CUSTOM_GROUP_GIFT_AID, self::C_CUSTOM_FIELD_GIFT_AID );
       
       if ($cfId && $contributionParams['donation_form']['gift_aid']) {
         $contributionParams["custom_{$cfId}"] = 1;
@@ -141,7 +138,10 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       }
       
       if ($contributionParams['donation_form']['payment_monthly_subscription']) {
-        $contributionParams["recur_frequency_unit"] = $pageConfig['recur_frequency_unit'] ? $pageConfig['recur_frequency_unit'] : 'month';
+        $contributionParams["recur_frequency_unit"] = 'month';
+        if ( !empty($pageConfig['recur_frequency_unit']) ) { 
+          $contributionParams["recur_frequency_unit"] = $pageConfig['recur_frequency_unit'];
+        }
         
         //recur Params, 
         $recurParams = array('contact_id' => $contactID);
@@ -150,7 +150,7 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
         $recurParams['auto_renew']          = CRM_Utils_Array::value('auto_renew', $pageConfig);
         $recurParams['frequency_unit']      = CRM_Utils_Array::value('recur_frequency_unit', $contributionParams);
         $recurParams['frequency_interval']  = 1;
-        $recurParams['installments']        = CRM_Utils_Array::value('installments', $params);
+        $recurParams['installments']        = CRM_Utils_Array::value('installments', $pageConfig);
         $recurParams['financial_type_id']   = CRM_Utils_Array::value('financial_type_id', $pageConfig);
         $recurParams['currency']            = CRM_Utils_Array::value('currency', $pageConfig);
         $recurParams['is_test']             = 0;
@@ -253,5 +253,43 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
    * @return void
    */
   public function buildQuickForm() {
+  }
+  
+  static function getNameAddressPostCodeByContactId($contactID) {
+    if (empty($contactID)) {
+      return array();
+    }
+    $returnArray['address']     = $returnArray['post_code'] = null;
+    $returnArray['displayName'] = CRM_Contact_BAO_Contact::displayName($contactID);
+    
+    //address
+    $result = civicrm_api3('Address', 'get', array(
+      'sequential' => 1,
+      'is_primary' => 1,
+      'contact_id' => $contactID,
+    ));
+    if ($result['count'] == 1) {
+      $address = array( $result['values'][0]['street_address'], $result['values'][0]['city']);
+      $returnArray['address'] = implode(', ', $address);
+      $returnArray['post_code'] = $result['values'][0]['postal_code'];
+    }
+    
+    return $returnArray;
+  }
+  
+  static function getcustomFieldIdbyGroupAndFieldName( $cgName, $cfName ) {
+    if (empty($cgName) || empty($cfName)) {
+      return NULL;
+    }
+    
+    $sqlCF = "SELECT cf.id 
+    FROM civicrm_custom_field cf 
+    INNER JOIN civicrm_custom_group cg ON (cg.id = cf.custom_group_id) 
+    WHERE cg.name = %1 AND cf.name = %2";
+    $sqlCFParams = array(
+      1 => array($cgName, 'String'),
+      2 => array($cfName, 'String'),
+    );
+    return CRM_Core_DAO::singleValueQuery($sqlCF, $sqlCFParams);
   }
 }
