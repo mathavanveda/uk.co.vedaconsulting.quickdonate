@@ -74,6 +74,29 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
     $pageConfig = civicrm_api3('ContributionPage', 'getsingle', array(
       'id' => $this->_id,
     ));
+    
+    //check honor block is active 
+    $this->_honor_block_is_active = $pageConfig['_honor_block_is_active'] = self::checkHonorBlockIsActive($this->_id);
+    if ($this->_honor_block_is_active) {
+      //pre process to get honor profile id
+      CRM_Contact_Form_ProfileContact::preprocess($this);
+      
+      // honor profile fields
+      $honoreeProfileFields = CRM_Core_BAO_UFGroup::getFields($this->_honoreeProfileId, FALSE, NULL,
+        NULL, NULL,
+        FALSE, NULL,
+        TRUE, NULL,
+        CRM_Core_Permission::CREATE
+      );
+    
+      $this->assign('honor_block_is_active', $this->_honor_block_is_active);
+      $this->assign('honoreeProfileFields', $honoreeProfileFields);
+
+      //build honoree profile section
+      CRM_Contact_Form_ProfileContact::buildQuickForm($this);
+    }
+   
+    
     if (is_array($pageConfig['payment_processor'])) {
       CRM_Core_Error::fatal(ts('Multiple payment processors not supported with quick donate.'));
     }
@@ -232,7 +255,25 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
           }
         }
         
-        
+        //Handle Honoree information
+        if ($contributionParams['honoree_profile_id'] 
+          && !empty($contributionParams['honor'])
+          && $contributionParams['donation_form']['gifting_to']
+        ) {
+          $softCreditTypes = CRM_Core_OptionGroup::values("soft_credit_type", FALSE);
+          $softCreditTypes = array_flip($softCreditTypes);
+          $this->_params = array(
+            'soft_credit_type_id' => $softCreditTypes['Gift'],
+            'honoree_profile_id'  => $contributionParams['honoree_profile_id'],
+            'honor'               => $contributionParams['honor'],
+          );
+          
+          $this->_contributionID = $contributionID;
+          $this->_values = $pageConfig;
+          CRM_Contact_Form_ProfileContact::postProcess($this);
+        }
+        //end honoree update
+    
         //redirect if the logged in user
         if ($session->get('userID')) {
           $urlParams = array(
@@ -275,6 +316,18 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
    * @return void
    */
   public function buildQuickForm() {
+  }
+  
+  static function checkHonorBlockIsActive($id) {
+    $ufJoinParams = array(
+      'module' => 'soft_credit',
+      'entity_table' => 'civicrm_contribution_page',
+      'entity_id' => $id,
+    );
+    $ufJoin = new CRM_Core_DAO_UFJoin();
+    $ufJoin->copyValues($ufJoinParams);
+    $ufJoin->find(TRUE);
+    return $ufJoin->is_active;
   }
   
   static function getNameAddressPostCodeByContactId($contactID) {

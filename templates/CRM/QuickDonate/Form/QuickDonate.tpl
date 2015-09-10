@@ -111,21 +111,14 @@
       <label for="direct_donation_form_gifting_to">I'd like to gift my donation</label>
     </div>
     <div class="gifting_to">
-      <div class="display_name">
-        <input name="giftee_details[display_name]" type="hidden" value="">
-        <label for="giftee_details_display_name">Name of person you are gifting to</label> 
-        <input id="giftee_details_display_name" name="giftee_details[display_name]" type="text" value="">
-      </div>
-      <div class="email">
-        <input name="giftee_details[email]" type="hidden" value="">
-        <label for="giftee_details_email">Recepients email address</label> 
-        <input id="giftee_details_email" name="giftee_details[email]" type="text" value="">
-      </div>
-      <div class="message">
-        <input name="giftee_details[message]" type="hidden" value="">
-        <label for="giftee_details_message">Your message</label>
-        <textarea id="giftee_details_message" name="giftee_details[message]"></textarea>
-      </div>            
+      {if $honor_block_is_active}
+      <fieldset class="crm-group honor_block-group">
+        <legend>Name of person you are gifting to</legend>
+        <div id="honorType" class="honoree-name-email-section">
+          {include file="CRM/UF/Form/Block.tpl" fields=$honoreeProfileFields mode=8 prefix='honor'}
+        </div>
+      </fieldset>
+      {/if}
     </div> 
     <div class="donate-buttons">
       <div class="cc">
