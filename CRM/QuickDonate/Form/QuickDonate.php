@@ -351,7 +351,7 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       $returnArray['street_address'] = $result['values'][0]['street_address'];
       $returnArray['city'] = $result['values'][0]['city'];
       $returnArray['post_code'] = $result['values'][0]['postal_code'];
-      $returnArray['supplemental_address_1'] = $result['values'][0]['supplemental_address_1'];
+      $returnArray['supplemental_address_1'] = isset($result['values'][0]['supplemental_address_1']) ? $result['values'][0]['supplemental_address_1'] : NULL;
       $returnArray['address_id'] = $result['values'][0]['id'];
     }
     

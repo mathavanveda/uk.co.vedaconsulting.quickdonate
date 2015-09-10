@@ -92,16 +92,19 @@
       </div> 
       <div class="giftee_declaration_text">
         <span><p>I confirm I have paid or will pay an amount of Income Tax and/or Capital 
-            Gains Tax for the current tax year (6 April 
-            to 5 April) that is at least equal to 
-            the amount of tax t
-            hat all the charities and Comm
-            unity Amateur Sports Clubs 
-            (CASCs) that I donate to will reclaim on my
-             gifts for the current tax year. I 
-            understand that other taxes 
-            such as VAT and Council Tax do not qualify. I 
-            understand the charity will reclaim 25p of tax on every £1 that I have given. 
+              Gains Tax for each tax year (6 April to 5 April) that is at least equal to the 
+              amount of tax that all t
+              he charities or Community Amateur Sports Clubs 
+              (CASCs) that I donate to
+              will reclaim on my gifts for 
+              that tax year. I understand 
+              that other taxes such as 
+              VAT and Council Tax do not 
+              qualify. I understand the 
+              charity will reclaim 28p of tax on every 
+              £1 that I gave up to 5 April 2008 and 
+              will reclaim 25p of tax on every £1 that
+               I give on or after 6 April 2008
         </p></span>
       </div>             
     </div>
