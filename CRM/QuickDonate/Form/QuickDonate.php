@@ -63,12 +63,12 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       
       $nameDetails = self::getNameAddressPostCodeByContactId($contactID);
       $addressId = $nameDetails['address_id'];
-      $this->assign('firstName', $nameDetails['first_name']);
-      $this->assign('lastName', $nameDetails['last_name']);
-      $this->assign('streetAddress'    , $nameDetails['street_address']);
-      $this->assign('supplementalAddress1'    , $nameDetails['supplemental_address_1']);
-      $this->assign('city'    , $nameDetails['city']);
-      $this->assign('postCode'  , $nameDetails['post_code']);
+      $this->assign('firstName'             , isset($nameDetails['first_name'])             ? $nameDetails['first_name']) : NULL;
+      $this->assign('lastName'              , isset($nameDetails['last_name'])              ? $nameDetails['last_name'] : NULL );
+      $this->assign('streetAddress'         , isset($nameDetails['street_address'])         ? $nameDetails['street_address'] : NULL );
+      $this->assign('supplementalAddress1'  , isset($nameDetails['supplemental_address_1']) ? $nameDetails['supplemental_address_1'] : NULL);
+      $this->assign('city'                  , isset($nameDetails['city'])                   ? $nameDetails['city'] : NULL);
+      $this->assign('postCode'              , isset($nameDetails['post_code'])              ? $nameDetails['post_code'] : NULL);
     }
 
     $pageConfig = civicrm_api3('ContributionPage', 'getsingle', array(
