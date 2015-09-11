@@ -63,7 +63,7 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       
       $nameDetails = self::getNameAddressPostCodeByContactId($contactID);
       $addressId = $nameDetails['address_id'];
-      $this->assign('firstName'             , isset($nameDetails['first_name'])             ? $nameDetails['first_name']) : NULL;
+      $this->assign('firstName'             , isset($nameDetails['first_name'])             ? $nameDetails['first_name'] : NULL);
       $this->assign('lastName'              , isset($nameDetails['last_name'])              ? $nameDetails['last_name'] : NULL );
       $this->assign('streetAddress'         , isset($nameDetails['street_address'])         ? $nameDetails['street_address'] : NULL );
       $this->assign('supplementalAddress1'  , isset($nameDetails['supplemental_address_1']) ? $nameDetails['supplemental_address_1'] : NULL);
