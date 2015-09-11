@@ -158,11 +158,13 @@
   
     $('#customButton').on('click', function(e) {
       // Open Checkout with further options
+      var amount = ($("#direct_donation_form_amount").val() * 100).toFixed(2);
+      
       handler.open({
         name:        'Cool Earth',
         description: 'Saving Rainforest',
         currency:    {/literal}'{$currency}'{literal},
-        amount:      $("#direct_donation_form_amount").val() * 100,
+        amount:      amount,
         email:       {/literal}'{$email}'{literal}
       });
       e.preventDefault();
