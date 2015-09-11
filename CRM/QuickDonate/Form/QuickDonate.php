@@ -119,7 +119,6 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       }
     }
     $pageConfig['default_amount'] = $amount ? $amount : $pageConfig['min_amount'];
-    
 
     $pageConfig['currency_symbol'] = CRM_Core_DAO::getFieldValue('CRM_Financial_DAO_Currency', $pageConfig['currency'], 'symbol', 'name');
     $this->assign('pageConfig', $pageConfig);

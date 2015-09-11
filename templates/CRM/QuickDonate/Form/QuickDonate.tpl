@@ -46,7 +46,7 @@
     <h4>{$pageConfig.intro_text}</h4>
     <div class="donate-amount">
       <span class="preinput">{$pageConfig.currency_symbol}</span>
-      <input id="direct_donation_form_amount" name="total_amount" required="required" type="number" value="{$pageConfig.default_amount}">
+      <input id="direct_donation_form_amount" name="total_amount" required="required" type="number" {if $pageConfig.min_amount} min="{$pageConfig.min_amount}" {/if} {if $pageConfig.max_amount} max="{$pageConfig.max_amount}" {/if} pattern="\d*" step="0.01" value="{$pageConfig.default_amount}">
       <span class="postinput">{$pageConfig.currency}</span>
     </div>
     <div class="monthly-subscription">
