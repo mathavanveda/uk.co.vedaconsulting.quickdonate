@@ -140,8 +140,8 @@ function quickdonate_civicrm_preProcess($formName, &$form) {
 
 function quickdonate_civicrm_buildForm($formName, &$form) {
   $session   = CRM_Core_Session::singleton();
-  if ($formName == 'CRM_Profile_Form_Edit' && $session->get('user_email')) {
-   $email = $session->get('user_email');
+  if ($formName == 'CRM_Profile_Form_Edit' && $session->get('quickdonate_user_email')) {
+   $email = $session->get('quickdonate_user_email');
    if (isset($form->_fields['email-Primary'])) {
     $defaults = array('email-Primary' => $email);
     $form->setDefaults($defaults);
