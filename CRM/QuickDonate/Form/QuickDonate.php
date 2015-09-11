@@ -252,6 +252,7 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
               "gid={$profileID}&reset=1",
               FALSE, NULL, TRUE
             );
+            $session->set('user_email', $requestParams['email']);
             $this->assign('linkTextUrl', $linkTextUrl);
           }
         }

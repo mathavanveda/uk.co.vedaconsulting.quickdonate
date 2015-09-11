@@ -137,17 +137,20 @@
           <input id="contact_details_post_code" name="contact_details[post_code]" type="text" value="{$postCode}">
         </div>
         <div class="giftee_declaration_text">
-         <p class="meta">I confirm I have paid or will pay an amount of Income Tax and/or Capital
-              Gains Tax for the current tax year (6 April
-              to 5 April) that is at least equal to
-              the amount of tax t
-              hat all the charities and Comm
-              unity Amateur Sports Clubs
-              (CASCs) that I donate to will reclaim on my
-               gifts for the current tax year. I
-              understand that other taxes
-              such as VAT and Council Tax do not qualify. I
-              understand the charity will reclaim 25p of tax on every £1 that I have given.
+         <p class="meta">I confirm I have paid or will pay an amount of Income Tax and/or Capital 
+              Gains Tax for each tax year (6 April to 5 April) that is at least equal to the 
+              amount of tax that all t
+              he charities or Community Amateur Sports Clubs 
+              (CASCs) that I donate to
+              will reclaim on my gifts for 
+              that tax year. I understand 
+              that other taxes such as 
+              VAT and Council Tax do not 
+              qualify. I understand the 
+              charity will reclaim 28p of tax on every 
+              £1 that I gave up to 5 April 2008 and 
+              will reclaim 25p of tax on every £1 that
+               I give on or after 6 April 2008
           </p>
         </div>
         </div>
@@ -156,7 +159,11 @@
           <button id="customButton3" class="customButton button payment large stripe-donate-button btnblock" name="button" type="submit">Donate</button>
           <a class=" payment large stripe-donate-button btnblock" href="{crmURL p='civicrm/contribute/transact' q="reset=1&id=4" fe='true'}" target="_blank">Direct Debit</a>
         </div>
-
+          <div class="donate-by-check">
+          <!-- a href="#donate-by-check">Give by check or stock</a-->
+          <input type="hidden" id="stripe_token" name="stripe_token"/>
+          <input type="hidden" id="email" name="email"/>
+        </div>
       </form>
     </div>
   </div>
