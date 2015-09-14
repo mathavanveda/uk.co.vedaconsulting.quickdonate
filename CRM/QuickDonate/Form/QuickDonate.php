@@ -168,6 +168,7 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
       $contributionParams['currencyID'] = $pageConfig['currency'];
       $contributionParams['currency'] = $pageConfig['currency'];
       $contributionParams['source']   = "QuickDonate-{$pageConfig['title']} ( {$pageConfig['id']} )";
+      $contributionParams['contribution_page_id']   = $pageConfig['id'];
       
       //gift aid 
       //get gift aid custom field id 
