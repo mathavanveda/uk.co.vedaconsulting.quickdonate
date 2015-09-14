@@ -389,12 +389,12 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
     
     if (!$addressId) {
       $address = civicrm_api3('Address', 'get', $params);
-      if (!$address['count'] == 1) {
+      if ($address['count'] == 1) {
         $params['id'] = $address['id'];
       }
     }
     else {
-      $params['id'] = $address['id'];
+      $params['id'] = $addressId;
     }
     
     if (!empty($contactDetails['street_address'])) {
@@ -408,7 +408,7 @@ class CRM_QuickDonate_Form_QuickDonate extends CRM_Core_Form {
     if (!empty($contactDetails['city'])) {
       $params ['city'] = $contactDetails['city'];
     } 
-    
+
     $addressUdpate = civicrm_api3('Address', 'create', $params);
     
     return TRUE;   
