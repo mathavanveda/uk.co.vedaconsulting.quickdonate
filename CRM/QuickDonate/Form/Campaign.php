@@ -65,6 +65,8 @@ class CRM_QuickDonate_Form_Campaign extends CRM_Core_Form {
     //MV: skip the pcpaccount form for logged in user
     if($this->controller->get('jumpForm') && $this->_pageId){
       CRM_QuickDonate_Form_PCPAccount::setPreProcessVariables($this);
+      // this DAO expecting pcp id as pageId 
+      $this->_pageId = $this->_id;
     }
     
     CRM_Utils_System::setTitle($title);
